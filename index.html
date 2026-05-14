@@ -104,13 +104,25 @@
         async function fetchGitHubRepos() {
             const username = 'NeesyaShania';
             const container = document.getElementById('github-projects');
-            const featuredRepos = ['star-bank', 'ResepKu-', 'Sistem-Perpustakaan', 'KasirPOS', 'Chefly'];
+            const featuredRepos = ['star-bank', 'resepku-', 'sistem-perpustakaan', 'kasirpos', 'chefly'];
             
             try {
-                const response = await fetch(`https://api.github.com/users/NeesyaShania/repos`);
+                const response = await fetch(`https://api.github.com/users/${username}/repos?per_page=100&sort=updated`);
                 const repos = await response.json();
-                const filteredRepos = repos.filter(repo => featuredRepos.includes(repo.name));
-                filteredRepos.sort((a, b) => featuredRepos.indexOf(a.name) - featuredRepos.indexOf(b.name));
+                const filteredRepos = repos.filter(repo => {
+                    const repoNameLowerCase = repo.name.toLowerCase().trim();
+                    return featuredRepos.includes(repoNameLowerCase);
+                });
+
+                filteredRepos.sort((a, b) => 
+                    featuredRepos.indexOf(a.name.toLowerCase()) - featuredRepos.indexOf(b.name.toLowerCase())
+                );
+
+                if (filteredRepos.length === 0) {
+                    container.innerHTML = "<p class='text-slate-400 text-center col-span-full'>Project tidak ditemukan. Pastikan nama repository di GitHub sesuai.</p>";
+                    return;
+                }
+
                 container.innerHTML = ''; 
                 filteredRepos.forEach(repo => {
                     const card = `
@@ -131,7 +143,9 @@
                         </div>`;
                     container.innerHTML += card;
                 });
-            } catch (e) { container.innerHTML = "<p>Failed to load projects.</p>"; }
+            } catch (e) { 
+                container.innerHTML = "<p class='text-center col-span-full'>Gagal memuat data dari GitHub.</p>"; 
+            }
         }
         fetchGitHubRepos();
     </script>
