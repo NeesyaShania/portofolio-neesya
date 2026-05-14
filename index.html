@@ -107,7 +107,7 @@
             const featuredRepos = ['star-bank', 'ResepKu-', 'Sistem-Perpustakaan', 'KasirPOS', 'Chefly'];
             
             try {
-                const response = await fetch(`https://api.github.com/users/NeesyaShania/repos`);
+                const response = await fetch(`https://api.github.com/users/NeesyaShania/portofolio-neesya`);
                 const repos = await response.json();
                 const filteredRepos = repos.filter(repo => featuredRepos.includes(repo.name));
                 filteredRepos.sort((a, b) => featuredRepos.indexOf(a.name) - featuredRepos.indexOf(b.name));
